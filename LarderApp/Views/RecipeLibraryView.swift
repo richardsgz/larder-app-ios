@@ -12,24 +12,27 @@ struct RecipeLibraryView: View {
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 12) {
                     ForEach(recipes) { recipe in
-                        NavigationLink {
-                            RecipeDetailView(recipe: recipe, libraryVM: libraryVM)
-                        } label: {
-                            RecipeCardView(
-                                recipe: recipe,
-                                servings: libraryVM.servings(for: recipe),
-                                isSelecting: libraryVM.isSelecting,
-                                isPicked: libraryVM.selectedIDs.contains(recipe.id)
-                            )
-                        }
-                        .buttonStyle(.plain)
-                        .simultaneousGesture(TapGesture().onEnded {
-                            if libraryVM.isSelecting {
+                        let card = RecipeCardView(
+                            recipe: recipe,
+                            servings: libraryVM.servings(for: recipe),
+                            isSelecting: libraryVM.isSelecting,
+                            isPicked: libraryVM.selectedIDs.contains(recipe.id)
+                        )
+
+                        if libraryVM.isSelecting {
+                            // Select mode: tapping toggles selection, no navigation.
+                            card.onTapGesture {
                                 libraryVM.toggleSelection(for: recipe)
                             }
-                        })
-                        // When selecting, the NavigationLink push is suppressed by disabling it.
-                        .disabled(libraryVM.isSelecting)
+                        } else {
+                            // Browse mode: tapping opens the recipe detail.
+                            NavigationLink {
+                                RecipeDetailView(recipe: recipe, libraryVM: libraryVM)
+                            } label: {
+                                card
+                            }
+                            .buttonStyle(.plain)
+                        }
                     }
                 }
                 .padding()

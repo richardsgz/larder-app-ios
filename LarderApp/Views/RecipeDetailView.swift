@@ -35,7 +35,7 @@ struct RecipeDetailView: View {
                 ForEach(recipe.ingredients) { ingredient in
                     VStack(spacing: 0) {
                         HStack {
-                            Text(formatted(ingredient.quantity * scale))
+                            Text((ingredient.quantity * scale).quantityString)
                                 .foregroundStyle(.secondary)
                                 .monospacedDigit()
                             Text(ingredient.unit)
@@ -50,11 +50,5 @@ struct RecipeDetailView: View {
             .padding()
         }
         .navigationBarTitleDisplayMode(.inline)
-    }
-
-    private func formatted(_ value: Double) -> String {
-        value.truncatingRemainder(dividingBy: 1) == 0
-            ? String(Int(value))
-            : String(format: "%.2g", value)
     }
 }

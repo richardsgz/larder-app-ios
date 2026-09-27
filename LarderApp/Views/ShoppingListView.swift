@@ -46,7 +46,7 @@ private struct ShoppingRow: View {
                 Image(systemName: isChecked ? "checkmark.circle.fill" : "circle")
                     .foregroundStyle(isChecked ? Color.teal : .secondary)
                 VStack(alignment: .leading) {
-                    Text("\(formatted(item.quantity)) \(item.unit) \(item.name)")
+                    Text("\(item.quantity.quantityString) \(item.unit) \(item.name)")
                         .strikethrough(isChecked)
                         .foregroundStyle(isChecked ? .secondary : .primary)
                     Text(Array(Set(item.contributingRecipes)).joined(separator: " + "))
@@ -56,11 +56,5 @@ private struct ShoppingRow: View {
             }
         }
         .buttonStyle(.plain)
-    }
-
-    private func formatted(_ value: Double) -> String {
-        value.truncatingRemainder(dividingBy: 1) == 0
-            ? String(Int(value))
-            : String(format: "%.2g", value)
     }
 }
